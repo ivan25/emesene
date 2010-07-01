@@ -203,7 +203,6 @@ class Theme(object):
         '''return the number of emoticons registered'''
         return len(set(Theme.EMOTES.values()))
 
-
     def is_valid_theme(self, file_list, path):
         """
         return True if the path contains a valid theme

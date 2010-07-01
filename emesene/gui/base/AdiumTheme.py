@@ -27,7 +27,7 @@ class AdiumTheme(object):
         self.outgoing       = None
         self.outgoing_next  = None
         self.info           = None
-
+        
         self.load_information(path)
 
     def load_information(self, path):
@@ -154,7 +154,7 @@ class AdiumTheme(object):
             variant_css_path = "file://" + os.path.join(self.resources_path,
                     "Variants", variant_name + ".css")
             variant_tag = '<style id="mainStyle" type="text/css"' + \
-                'media="screen,print">	@import url( "' + variant_css_path + '" ); </style>'
+                'media="screen,print">  @import url( "' + variant_css_path + '" ); </style>'
         else:
             variant_tag = ""
 

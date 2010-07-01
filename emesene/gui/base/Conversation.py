@@ -3,6 +3,8 @@ import gui
 import extension
 import MarkupParser
 
+import os.path
+
 import logging
 log = logging.getLogger('gui.base.Conversation')
 
@@ -90,6 +92,52 @@ class Conversation(object):
 
         self.cstyle = e3.Style(font, color, font_bold, font_italic,
             font_underline, font_strike, font_size)
+            
+        self.SaveUserStyle(font, font_color, font_bold, font_italic,
+            font_underline, font_strike, font_size)
+
+    def SaveUserStyle(self, font, color, font_bold, font_italic,
+            font_underline, font_strike, font_size):
+        '''Create the file userstyle.css to allow style customization
+        even with adium message view'''
+        style = 'body {\nfont-family: %s;\ncolor: %s;\nfont-size: %s;\n' % (
+                font + ' !important', str(color) + ' !important', str(font_size) + ' !important')
+        if font_bold == True:
+            style += 'font-weight: bold !important;\n'
+        if font_italic == True:
+            style += 'font-style: italic !important;\n'
+        if font_underline == True or font_strike == True:
+            if font_underline == True and font_strike == True:
+                style += 'text-decoration: underline line-through !important;\n'
+            elif font_underline == True and font_strike == False:
+                style += 'text-decoration: underline !important;\n'
+            elif font_underline == False and font_strike == True:
+                style += 'text-decoration: line-through !important;\n'
+        style += '}'
+        
+        self.userstyle_path = os.path.join(self.session.config_dir.base_dir,
+                                                    'userstyle.css')
+        us = open(self.userstyle_path, 'w')
+        us.write(style)
+        us.close()
+        
+        self.import_userstyle_main(self.session.config.adium_theme, self.userstyle_path)
+        
+    def import_userstyle_main(self, theme, us_path):
+        '''adds the line @import(...) in the adium_theme/../main.css'''
+        main_path = os.path.join(os.getcwd(), 'themes/conversations', 
+                                theme + '.AdiumMessageStyle', 'Contents/Resources/main.css')
+        fma = open(main_path, 'r')
+        content = fma.read()
+        fma.close()
+        
+        at_import = '@import "%s";' % us_path
+        
+        if at_import not in content:
+            at_import = '%s\n%s' % (at_import, content)
+            fmaa = open(main_path, 'w')
+            fmaa.write(at_import)
+            fmaa.close()
 
     def on_font_selected(self, style):
         '''called when a new font is selected'''

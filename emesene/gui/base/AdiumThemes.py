@@ -88,10 +88,9 @@ class AdiumThemes(object):
     def validate_structure(self, base_path, structure):
         '''validate the required files and directories from base_path
         '''
-
         for item in structure:
             name = os.path.join(base_path, item['name'])
-
+            
             if item['type'] == FILE:
                 if not os.path.isfile(name):
                     return False, "%s is not a file" % (name, )
@@ -104,4 +103,3 @@ class AdiumThemes(object):
                 return self.validate_structure(name, item['childs'])
 
         return True, "ok"
-
